@@ -1,17 +1,18 @@
- 
-import os
-import sys
 import configparser
 config_id = "29679445"
 config_hash = "e656a7489649d542ceb3c326f54345ba"
 config_model = "FoxUserbot"
 config = configparser.ConfigParser()
 config.read("config.ini")
+
+
 def api():
     get_id = config.get("pyrogram", "api_id")
     get_hash = config.get("pyrogram", "api_hash")
     get_device_model = config.get("pyrogram", "device_model")
     return get_id, get_hash, get_device_model
+
+
 def my_api():
     try:
         api_id, api_hash, device_model = api()
@@ -27,3 +28,10 @@ def my_api():
         device_model = config_model
         print(f"Not found config.ini\nGenerating new...")
     return api_id, api_hash, device_model
+
+
+def my_proxy():
+    return config.get("pyrogram", "socks5_proxy")
+
+def my_url_asr():
+    return config.get("pyrogram", "url_asr")
