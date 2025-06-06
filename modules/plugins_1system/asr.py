@@ -1,14 +1,17 @@
 import io
 import requests
-from tempfile import NamedTemporaryFile
+
 from pydub import AudioSegment
-
-from configurator import my_proxy, my_url_asr
-from pyrogram import Client, filters
 from pyrogram.types import Message
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
+from pyrogram import Client, filters
 
+from prefix import my_prefix
+from configurator import my_proxy, my_url_asr
+from requirements_installer import install_library
+from modules.plugins_1system.settings.main_settings import module_list, file_list
+
+
+install_library('pydub')
 
 class ASR:
     def __init__(self, audio_bytes):
@@ -43,7 +46,6 @@ async def recognition(client: Client, message: Message) -> None:
 
     await message.edit("🔄 Транскрибирую аудио...")
 
-    # Скачиваем голосовое сообщение во временный файл
     from tempfile import NamedTemporaryFile
     import io
 
@@ -55,7 +57,6 @@ async def recognition(client: Client, message: Message) -> None:
 
     voice_bytes.seek(0)
 
-    # Запускаем ASR
     asr = ASR(voice_bytes)
     try:
         result = await asr.recognition()
@@ -63,7 +64,6 @@ async def recognition(client: Client, message: Message) -> None:
     except Exception as e:
         text = f"⚠️ Ошибка распознавания: {e}"
 
-    # Редактируем исходное сообщение с финальным результатом
     await message.edit(f"📝 Результат:\n<blockquote>{text}</blockquote>")
 
 
